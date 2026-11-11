@@ -39,6 +39,7 @@ import { projects } from '../data/projects';
               </ul>
               <div class="actions">
                 <a class="btn" href={`/work/${p.slug}`}>read the postmortem</a>
+                <a class="btn" href={p.repo} target="_blank" rel="noopener">live code <span class="arrow" aria-hidden="true">↗</span></a>
                 {p.live ? (
                   <a class="btn primary" href={p.live} target="_blank" rel="noopener">open live site</a>
                 ) : (
@@ -103,6 +104,7 @@ import { projects } from '../data/projects';
   .notes { margin: 0; padding-left: 1.1em; color: var(--ivory-dim); font-size: 0.95rem; display: grid; gap: 10px; align-content: start; }
   .notes li::marker { color: var(--accent); }
   .actions { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 12px; }
+  .arrow { color: var(--accent); font-size: 1.05em; line-height: 1; }
   .ghost { color: var(--ivory-dim); cursor: default; }
   @media (max-width: 760px) {
     .head { grid-template-columns: 1fr; gap: 2px; }

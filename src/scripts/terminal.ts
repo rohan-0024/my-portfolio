@@ -5,6 +5,7 @@
 import { projects, stack, changelog } from '../data/projects';
 import { nodes } from '../data/brain';
 import { resume } from '../data/resume';
+import { about } from '../data/about';
 
 type Out = { text: string; cls?: 'res' | 'ok' | 'warn' | 'err' | 'hl'; html?: boolean };
 type Cmd = { name: string; desc: string; run: (args: string[]) => Out[] | 'clear' | 'exit'; hidden?: boolean };
@@ -15,7 +16,7 @@ const pad = (s: string, n: number) => s + ' '.repeat(Math.max(0, n - s.length));
 
 const SECTIONS: Record<string, string> = {
   home: '/#top', top: '/#top', changelog: '/#changelog', work: '/#work', projects: '/#work',
-  stack: '/#stack', connectome: '/#connectome', brain: '/#connectome', contact: '/#contact', issue: '/#contact', resume: '/resume',
+  stack: '/#stack', connectome: '/#connectome', brain: '/#connectome', contact: '/#contact', issue: '/#contact', about: '/#about', me: '/#about', resume: '/resume',
 };
 const START = new Date('2023-08-01T00:00:00Z');
 
@@ -78,6 +79,12 @@ export function initTerminal() {
       return p ? go(`/work/${p.slug}`) : [{ text: 'postmortem: name a project. try `ls projects`', cls: 'err' }];
     } },
     { name: 'skills', desc: 'the stack and where it earned its place', run: () => stack.map((s) => ({ text: `${pad(s.name, 16)}${s.where}`, cls: 'res' as const })) },
+    { name: 'about', desc: 'the story, and life off the keyboard', run: () => [
+      ...about.story.map((c) => ({ text: `${pad(c.when, 8)}${c.text}`, cls: 'res' as const })),
+      { text: ' ', cls: 'res' as const },
+      ...about.activities.map((a) => ({ text: `${pad(a.label, 14)}${a.one}  [${a.status}]`, cls: 'hl' as const })),
+      { text: `pictures: ${link('/#about', 'cd about')}`, cls: 'res' as const, html: true },
+    ] },
     { name: 'learning', desc: 'what is in progress right now', run: () => {
       const l = nodes.filter((n) => n.status === 'learning');
       return l.length ? l.map((n) => ({ text: `${pad(n.label, 16)}${n.desc}`, cls: 'warn' as const })) : [{ text: 'nothing flagged. suspicious.', cls: 'res' }];

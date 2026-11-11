@@ -17,6 +17,7 @@ Built with [Astro](https://astro.build) and GSAP. Static output, deployed on Ver
 | open-issue | Contact form framed as a bug report, powered by Web3Forms |
 | Terminal | Press `/` or the `>_` button anywhere. Real commands: `help`, `whoami`, `ls projects`, `cat creditclear`, `cd work`, `learning`, `man rohan`, `sudo hire rohan` |
 | Status line | Under the hero: what is being learned (from the Connectome data), last GitHub push and repo count fetched at build time, "ago" computed in the browser |
+| About | `cat ./about.md`: the story before the first commit beside a cut-out portrait, then "Off the keyboard": three tappable activity cards (rides, badminton, keyboard) that open a photo and caption. Data in `src/data/about.ts`, images in `public/about/` |
 | /work/<slug> | Each project as an incident-report postmortem: summary, impact, timeline, root cause, resolution, verification, lessons, action items |
 | /resume | The résumé as a Unix man page, `man rohan`, with the PDF download |
 
@@ -46,6 +47,7 @@ A hidden honeypot checkbox filters bots.
 - Share card (the image shown when the link is posted): `og/og.html`, rendered to `public/og.png`
 - Postmortems: `src/data/postmortems.ts`. Résumé facts: `src/data/resume.ts` (keep in sync with `public/Rohan_Paul_Resume.pdf`)
 - Terminal commands: `src/scripts/terminal.ts`
+- About story and activities: `src/data/about.ts` (portrait is a WebP with baked-in alpha; regenerate from a photo on a pure black background)
 
 ## Deploy to Vercel
 

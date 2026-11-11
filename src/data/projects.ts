@@ -8,6 +8,7 @@ export type Project = {
   stack: string[];
   accent: 'mint' | 'lavender' | 'butter';
   live?: string;
+  repo: string;
   notes: string[];
 };
 
@@ -23,6 +24,7 @@ export const projects: Project[] = [
       'An API that scores on those payment records instead. It crawls live RBI repo rates, MoSPI inflation and telecom plan prices per request, runs a logistic regression served as plain JSON in Lambda, and returns every factor\u2019s exact point impact plus a month-by-month plan to reach a Clear score.',
     stack: ['React 19', 'AWS Lambda', 'SAM', 'DynamoDB', 'S3 + CloudFront', 'Cognito', 'Python ML'],
     accent: 'mint',
+    repo: 'https://github.com/rohan-0024/creditclear',
     live: 'https://d1jt51uy02drli.cloudfront.net',
     notes: [
       'Logistic model beat the hand-written rule formula by 0.023 AUC, with a 95% CI that excluded zero.',
@@ -42,6 +44,7 @@ export const projects: Project[] = [
       'Each due reminder is claimed in the database before it is sent, so it goes out exactly once even under concurrent runs. Failed sends retry three times, and editing a reminder re-arms it. Mobile-first UI with a wax-seal checkbox animated by GSAP Flip.',
     stack: ['React', 'GSAP', 'Node + Express', 'SQLite / Turso', 'Google OAuth', 'Vercel'],
     accent: 'lavender',
+    repo: 'https://github.com/rohan-0024/all-in-one-organizer',
     live: 'https://getscriptorium.vercel.app',
     notes: [
       'Monorepo with npm workspaces. Client and API deploy as two Vercel services behind one domain.',
@@ -60,6 +63,7 @@ export const projects: Project[] = [
       'Google Places (New) data proxied through Express so the API key never reaches the browser. Markers are colour-coded by live port availability, filters show live facet counts, and one review per driver per station keeps ratings honest.',
     stack: ['React 18', 'Google Maps', 'Express + Zod', 'Firebase Auth', 'Firestore', 'Render'],
     accent: 'butter',
+    repo: 'https://github.com/rohan-0024/voltroute-ev-charge-locator',
     notes: [
       'Advanced Markers are real DOM nodes, so GSAP can animate them.',
       'Whole palette tweens between light and dark instead of snapping.',
