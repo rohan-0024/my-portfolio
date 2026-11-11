@@ -6,16 +6,16 @@ const counts = {
   learning: nodes.filter((n) => n.status === 'learning').length,
 };
 ---
-<section id="cortex" class="reveal">
+<section id="connectome" class="reveal">
   <div class="wrap">
-    <p class="eyebrow">cat ./brain --graph</p>
-    <h2>Brain Cortex.</h2>
+    <p class="eyebrow">cat ./brain --connectome</p>
+    <h2>Connectome.</h2>
     <p class="intro dim">
       Everything I've learned, as one graph. Hubs are domains, ivory nodes are things I shipped,
       dots are tools, rings are ideas I learned the hard way. Dashed rings are still in progress.
     </p>
 
-    <div class="cortex" data-cortex>
+    <div class="connectome" data-connectome>
       <div class="toolbar">
         <div class="legend mono" data-legend aria-label="Filter by domain"></div>
         <div class="zoom">
@@ -36,14 +36,14 @@ const counts = {
 </section>
 
 <script>
-  import { initCortex } from '../scripts/cortex';
-  const root = document.querySelector<HTMLElement>('[data-cortex]');
-  if (root) initCortex(root);
+  import { initConnectome } from '../scripts/connectome';
+  const root = document.querySelector<HTMLElement>('[data-connectome]');
+  if (root) initConnectome(root);
 </script>
 
 <style>
   .intro { max-width: 62ch; margin: 0 0 24px; }
-  .cortex { border: 1px solid var(--rule); border-radius: 16px; background: var(--ink-2); overflow: hidden; }
+  .connectome { border: 1px solid var(--rule); border-radius: 16px; background: var(--ink-2); overflow: hidden; }
   .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 14px; border-bottom: 1px solid var(--rule); flex-wrap: wrap; }
   .legend { display: flex; flex-wrap: wrap; gap: 6px; }
   .legend :global(.lg) {

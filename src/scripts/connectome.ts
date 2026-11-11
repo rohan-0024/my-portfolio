@@ -1,5 +1,5 @@
 /**
- * Brain Cortex: a hand-rolled 3D force graph on a 2D canvas.
+ * Connectome: a hand-rolled 3D force graph on a 2D canvas.
  * No three.js. Positions are settled once with a simple 3D force simulation,
  * then the whole cloud is rotated and perspective-projected every frame.
  */
@@ -16,7 +16,7 @@ type SimNode = BrainNode & {
 
 const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-export function initCortex(root: HTMLElement) {
+export function initConnectome(root: HTMLElement) {
   const canvas = root.querySelector<HTMLCanvasElement>('canvas');
   const card = root.querySelector<HTMLElement>('[data-card]');
   const legend = root.querySelector<HTMLElement>('[data-legend]');

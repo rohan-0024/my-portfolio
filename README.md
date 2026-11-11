@@ -13,7 +13,7 @@ Built with [Astro](https://astro.build) and GSAP. Static output, deployed on Ver
 | Changelog | A version log instead of a bio |
 | Work | Problem → fix → stack entries for CreditClear, Scriptorium and VoltRoute |
 | Stack | Tap a tool to open a card on where it earned its place |
-| Brain Cortex | A hand-rolled 3D force graph of everything learned, drawn on a canvas with no 3D library |
+| Connectome | A hand-rolled 3D force graph of everything learned, drawn on a canvas with no 3D library |
 | open-issue | Contact form framed as a bug report, powered by Web3Forms |
 
 ## Run locally
@@ -36,7 +36,7 @@ A hidden honeypot checkbox filters bots.
 ## Edit content
 
 - Projects, changelog entries and the stack cards: `src/data/projects.ts`
-- Brain Cortex nodes and links: `src/data/brain.ts` (one object per node, one `[from, to]` pair per link)
+- Connectome nodes and links: `src/data/brain.ts` (one object per node, one `[from, to]` pair per link)
 - The three cycling titles: `TITLES` in `src/scripts/motion.ts`
 - Colours: CSS variables at the top of `src/styles/global.css`
 - Share card (the image shown when the link is posted): `og/og.html`, rendered to `public/og.png`

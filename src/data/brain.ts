@@ -1,5 +1,5 @@
 /**
- * The Brain Cortex graph. Every node is something learned; every link is where it connects.
+ * The Connectome graph. Every node is something learned; every link is where it connects.
  * kind: 'domain' = a cluster hub, 'project' = something shipped, 'tool' = a technology, 'concept' = an idea learned the hard way.
  */
 export type NodeKind = 'domain' | 'project' | 'tool' | 'concept';
