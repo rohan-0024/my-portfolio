@@ -50,13 +50,8 @@ function hero() {
     typeInto(tl, out, next, 0.05);
   };
 
-  if (reduced()) {
-    cmd.textContent = command;
-    out.textContent = TITLES[0];
-    showRest();
-    return;
-  }
-
+  // Typing is text changing, not movement, so it runs even under prefers-reduced-motion.
+  // The stagger in showRest() and the scroll reveals still switch off for those users.
   cmd.textContent = '';
   out.textContent = '';
   const tl = gsap.timeline({ delay: 0.3 });
