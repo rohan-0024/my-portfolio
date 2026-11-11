@@ -15,6 +15,10 @@ Built with [Astro](https://astro.build) and GSAP. Static output, deployed on Ver
 | Stack | Tap a tool to open a card on where it earned its place |
 | Connectome | A hand-rolled 3D force graph of everything learned, drawn on a canvas with no 3D library |
 | open-issue | Contact form framed as a bug report, powered by Web3Forms |
+| Terminal | Press `/` or the `>_` button anywhere. Real commands: `help`, `whoami`, `ls projects`, `cat creditclear`, `cd work`, `learning`, `man rohan`, `sudo hire rohan` |
+| Status line | Under the hero: what is being learned (from the Connectome data), last GitHub push and repo count fetched at build time, "ago" computed in the browser |
+| /work/<slug> | Each project as an incident-report postmortem: summary, impact, timeline, root cause, resolution, verification, lessons, action items |
+| /resume | The résumé as a Unix man page, `man rohan`, with the PDF download |
 
 ## Run locally
 
@@ -40,6 +44,8 @@ A hidden honeypot checkbox filters bots.
 - The three cycling titles: `TITLES` in `src/scripts/motion.ts`
 - Colours: CSS variables at the top of `src/styles/global.css`
 - Share card (the image shown when the link is posted): `og/og.html`, rendered to `public/og.png`
+- Postmortems: `src/data/postmortems.ts`. Résumé facts: `src/data/resume.ts` (keep in sync with `public/Rohan_Paul_Resume.pdf`)
+- Terminal commands: `src/scripts/terminal.ts`
 
 ## Deploy to Vercel
 

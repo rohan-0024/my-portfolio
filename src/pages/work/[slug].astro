@@ -1,0 +1,138 @@
+---
+import Base from '../../layouts/Base.astro';
+import SubNav from '../../components/SubNav.astro';
+import { postmortems } from '../../data/postmortems';
+
+export function getStaticPaths() {
+  return postmortems.map((p) => ({ params: { slug: p.slug }, props: { p } }));
+}
+const { p } = Astro.props;
+const others = postmortems.filter((o) => o.slug !== p.slug);
+const sevColor = p.severity === 'SEV-1' ? 'var(--coral)' : p.severity === 'SEV-2' ? 'var(--butter)' : 'var(--mint)';
+---
+<Base title={`${p.project} postmortem — ${p.title}`} description={p.summary}>
+  <SubNav crumb={`work/${p.slug}`} />
+
+  <main class={`wrap accent-${p.accent}`}>
+    <header class="head">
+      <p class="eyebrow">cat ./work/{p.slug}/postmortem.md</p>
+      <div class="meta mono">
+        <span class="id">{p.id}</span>
+        <span class="sev" style={`--sev:${sevColor}`}>{p.severity}</span>
+        <span class={`status ${p.status}`}>{p.status}</span>
+        <span class="dim">opened {p.opened} · resolved {p.resolved}</span>
+      </div>
+      <h1>{p.title}</h1>
+      <p class="project mono">project: <strong>{p.project}</strong></p>
+    </header>
+
+    <article class="report">
+      <section>
+        <h2><span class="n">1.</span> Summary</h2>
+        <p>{p.summary}</p>
+      </section>
+
+      <section>
+        <h2><span class="n">2.</span> Impact</h2>
+        <ul>{p.impact.map((i) => <li>{i}</li>)}</ul>
+      </section>
+
+      <section>
+        <h2><span class="n">3.</span> Timeline</h2>
+        <ol class="timeline">
+          {p.timeline.map((e) => (
+            <li>
+              <span class="t mono">{e.t}</span>
+              <span class="what">{e.what}</span>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section>
+        <h2><span class="n">4.</span> Root cause</h2>
+        <ul>{p.rootCause.map((i) => <li>{i}</li>)}</ul>
+      </section>
+
+      <section>
+        <h2><span class="n">5.</span> Resolution</h2>
+        <ul>{p.resolution.map((i) => <li>{i}</li>)}</ul>
+      </section>
+
+      <section>
+        <h2><span class="n">6.</span> Verification</h2>
+        <ul class="checks">{p.verification.map((i) => <li>{i}</li>)}</ul>
+      </section>
+
+      <section>
+        <h2><span class="n">7.</span> Lessons learned</h2>
+        <ul>{p.lessons.map((i) => <li>{i}</li>)}</ul>
+      </section>
+
+      <section>
+        <h2><span class="n">8.</span> Action items</h2>
+        <ul class="todo">{p.actionItems.map((i) => <li>{i}</li>)}</ul>
+      </section>
+
+      <section>
+        <h2><span class="n">9.</span> Stack</h2>
+        <p class="tags">{p.stack.map((s) => <span class="tag">{s}</span>)}</p>
+      </section>
+
+      <footer class="actions">
+        {p.live && <a class="btn primary" href={p.live} target="_blank" rel="noopener">open live site</a>}
+        <a class="btn" href="/#work">back to work</a>
+      </footer>
+    </article>
+
+    <aside class="more">
+      <p class="eyebrow">ls ../</p>
+      <ul>
+        {others.map((o) => (
+          <li><a href={`/work/${o.slug}`}><span class="mono dim">{o.id}</span> {o.project}: {o.title}</a></li>
+        ))}
+      </ul>
+    </aside>
+  </main>
+</Base>
+
+<style>
+  main { padding-block: clamp(40px, 8vw, 96px); }
+  .head { margin-bottom: 40px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; font-size: 0.8rem; margin-bottom: 18px; }
+  .id { color: var(--ivory); }
+  .sev { color: var(--sev); border: 1px solid var(--sev); border-radius: 4px; padding: 1px 7px; }
+  .status { border-radius: 4px; padding: 1px 7px; color: var(--ink); background: var(--mint); }
+  .status.monitoring { background: var(--butter); }
+  h1 { font-size: clamp(1.8rem, 4.5vw, 3rem); max-width: 22ch; }
+  .project { margin: 14px 0 0; color: var(--ivory-dim); }
+  .project strong { color: var(--accent); font-weight: 500; }
+
+  .report { border-top: 1px solid var(--rule); }
+  .report section { padding: 28px 0; border-bottom: 1px solid var(--rule); display: grid; grid-template-columns: 14rem 1fr; gap: 12px 32px; }
+  .report h2 { font-size: 1.05rem; margin: 0; color: var(--ivory); font-family: var(--font-mono); font-weight: 500; }
+  .n { color: var(--accent); margin-right: 8px; }
+  .report p, .report ul, .report ol { margin: 0; }
+  .report ul { padding-left: 1.1em; display: grid; gap: 10px; }
+  .report li::marker { color: var(--accent); }
+  .checks { list-style: none; padding-left: 0; }
+  .checks li::before { content: '\2713  '; color: var(--mint); font-family: var(--font-mono); }
+  .todo { list-style: none; padding-left: 0; }
+  .todo li::before { content: '[ ]  '; color: var(--butter); font-family: var(--font-mono); }
+  .timeline { list-style: none; padding: 0; display: grid; gap: 14px; }
+  .timeline li { display: grid; grid-template-columns: 5rem 1fr; gap: 16px; }
+  .t { color: var(--accent); }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; padding-top: 28px; }
+
+  .more { margin-top: 56px; }
+  .more ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .more a { text-decoration: none; }
+  .more a:hover { color: var(--accent); }
+
+  @media (max-width: 760px) {
+    .report section { grid-template-columns: 1fr; gap: 10px; }
+    .timeline li { grid-template-columns: 1fr; gap: 2px; }
+    .actions .btn { flex: 1 1 auto; justify-content: center; }
+  }
+</style>

@@ -1,0 +1,73 @@
+---
+/**
+ * Live status line. GitHub is queried once at build time (Vercel rebuilds on every push),
+ * and the "ago" part is computed in the browser so it stays accurate between builds.
+ */
+import { nodes } from '../data/brain';
+
+const USER = 'rohan-0024';
+const learning = nodes.filter((n) => n.status === 'learning').map((n) => n.label);
+
+type GH = { repos: number | null; lastPush: string | null; lastRepo: string | null };
+const gh: GH = { repos: null, lastPush: null, lastRepo: null };
+
+async function fetchJson(url: string) {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), 6000);
+  try {
+    const res = await fetch(url, { signal: ctrl.signal, headers: { Accept: 'application/vnd.github+json', 'User-Agent': 'portfolio-build' } });
+    return res.ok ? await res.json() : null;
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(t);
+  }
+}
+
+const [user, events] = await Promise.all([
+  fetchJson(`https://api.github.com/users/${USER}`),
+  fetchJson(`https://api.github.com/users/${USER}/events/public?per_page=100`),
+]);
+if (user?.public_repos) gh.repos = user.public_repos;
+if (Array.isArray(events)) {
+  const pushes = events.filter((e: any) => e.type === 'PushEvent').sort((a: any, b: any) => (a.created_at < b.created_at ? 1 : -1));
+  if (pushes[0]) {
+    gh.lastPush = pushes[0].created_at;
+    gh.lastRepo = String(pushes[0].repo?.name ?? '').replace(`${USER}/`, '');
+  }
+}
+const built = new Date().toISOString();
+---
+<p class="status mono" data-status-line>
+  <span class="k">status:</span>
+  <span class="item"><span class="dot live"></span>currently learning <b>{learning.join(', ') || 'something new'}</b></span>
+  {gh.lastPush && (
+    <span class="item">last commit <b><time datetime={gh.lastPush} data-ago>{gh.lastPush.slice(0, 10)}</time></b>{gh.lastRepo && <span class="dim"> to {gh.lastRepo}</span>}</span>
+  )}
+  {gh.repos !== null && <span class="item"><b>{gh.repos}</b> public repos</span>}
+  <span class="item dim">built <time datetime={built} data-ago>{built.slice(0, 10)}</time></span>
+</p>
+
+<script>
+  // Turn ISO timestamps into "3h ago" on the client, so a static build still reads right.
+  const rel = (iso: string) => {
+    const s = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000);
+    if (s < 60) return 'just now';
+    const m = s / 60, h = m / 60, d = h / 24;
+    if (m < 60) return `${Math.floor(m)}m ago`;
+    if (h < 24) return `${Math.floor(h)}h ago`;
+    if (d < 30) return `${Math.floor(d)}d ago`;
+    return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+  };
+  document.querySelectorAll<HTMLTimeElement>('[data-ago]').forEach((t) => { t.textContent = rel(t.dateTime); });
+</script>
+
+<style>
+  .status { display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: center; margin: 26px 0 0; font-size: 0.8rem; color: var(--ivory-dim); }
+  .k { color: var(--coral); }
+  .item { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+  .item b { color: var(--ivory); font-weight: 500; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 0 0 rgba(184, 242, 214, 0.5); animation: pulse 2s ease-out infinite; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(184, 242, 214, 0.5); } 100% { box-shadow: 0 0 0 8px rgba(184, 242, 214, 0); } }
+  @media (max-width: 560px) { .status { gap: 4px 14px; font-size: 0.74rem; } }
+</style>

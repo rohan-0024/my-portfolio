@@ -1,0 +1,176 @@
+---
+import Base from '../layouts/Base.astro';
+import SubNav from '../components/SubNav.astro';
+import { resume as r } from '../data/resume';
+import { projects } from '../data/projects';
+const today = new Date().toLocaleDateString('en-GB', { year: 'numeric', month: 'short' });
+---
+<Base title="man rohan — Rohan Paul résumé" description={`ROHAN(1) — ${r.titles.join(', ')}. ${r.description}`}>
+  <SubNav crumb="resume" />
+
+  <main class="wrap">
+    <p class="eyebrow">man rohan</p>
+    <div class="manhead mono"><span>ROHAN(1)</span><span>User Commands</span><span>ROHAN(1)</span></div>
+
+    <article class="man">
+      <section>
+        <h2>NAME</h2>
+        <p><b>rohan</b> &mdash; {r.titles.join(', ').toLowerCase()}. {r.description.split('. ')[0]}.</p>
+      </section>
+
+      <section>
+        <h2>SYNOPSIS</h2>
+        <p class="mono syn"><b>rohan</b> [<i>--data</i>] [<i>--software</i>] [<i>--cloud</i>] [<i>--explain</i>] &lt;<i>problem</i>&gt;</p>
+      </section>
+
+      <section>
+        <h2>DESCRIPTION</h2>
+        <p>{r.description}</p>
+        <p>Currently a B.Tech student in Computer Science with a Cloud Computing specialisation at SRM Institute of Science &amp; Technology, graduating May 2027. Ships side projects to AWS, Firebase and Vercel, and writes postmortems for them.</p>
+      </section>
+
+      <section>
+        <h2>OPTIONS</h2>
+        <dl class="opts">
+          <dt class="mono">--data</dt>
+          <dd>Pipelines and models checked against the code that serves them. scikit-learn, XGBoost, PySpark, feature engineering, explainable scoring, Grafana. Power BI in progress.</dd>
+          <dt class="mono">--software</dt>
+          <dd>React, Node + Express, Astro, TypeScript, Java, C/C++. Strict schemas at the edge, idempotent side effects, mobile-first interfaces.</dd>
+          <dt class="mono">--cloud</dt>
+          <dd>Serverless first on AWS (Lambda, API Gateway, DynamoDB, S3, CloudFront, Cognito, SAM). Azure DP-900. Firebase, Vercel, Render. Fortinet cloud security.</dd>
+          <dt class="mono">--explain</dt>
+          <dd>Returns every factor with its exact impact. Refuses to ship a black box for a decision that affects a person.</dd>
+          <dt class="mono">--fallback</dt>
+          <dd>Default on. Every live dependency has a dated snapshot behind it.</dd>
+        </dl>
+      </section>
+
+      <section>
+        <h2>SKILLS</h2>
+        <dl class="opts">
+          {r.skills.map((s) => (
+            <>
+              <dt class="mono">{s.group}</dt>
+              <dd>{s.items.join(' · ')}</dd>
+            </>
+          ))}
+        </dl>
+      </section>
+
+      <section>
+        <h2>EXPERIENCE</h2>
+        {r.experience.map((e) => (
+          <div class="entry">
+            <p class="line"><b>{e.org}</b> <span class="mono dim">{e.when}</span></p>
+            <p class="role mono">{e.role}</p>
+            <p>{e.what}</p>
+          </div>
+        ))}
+      </section>
+
+      <section>
+        <h2>FILES</h2>
+        <p class="dim">Projects with a postmortem on this site.</p>
+        <dl class="opts files">
+          {projects.map((p) => (
+            <>
+              <dt class="mono"><a href={`/work/${p.slug}`}>./work/{p.slug}</a></dt>
+              <dd>{p.tagline} <span class="dim">{p.stack.slice(0, 4).join(', ')}.</span></dd>
+            </>
+          ))}
+        </dl>
+        <p class="dim" style="margin-top:18px">Other work.</p>
+        <dl class="opts files">
+          {r.otherProjects.map((p) => (
+            <>
+              <dt class="mono">{p.name} <span class="dim">{p.when}</span></dt>
+              <dd>{p.what}</dd>
+            </>
+          ))}
+        </dl>
+      </section>
+
+      <section>
+        <h2>EDUCATION</h2>
+        {r.education.map((e) => (
+          <div class="entry">
+            <p class="line"><b>{e.org}</b> <span class="mono dim">{e.when}</span></p>
+            <p>{e.what} <span class="mono dim">· {e.note}</span></p>
+          </div>
+        ))}
+      </section>
+
+      <section>
+        <h2>CERTIFICATIONS</h2>
+        <ul class="certs">
+          {r.certifications.map((c) => (
+            <li><span class="mono dim">{c.year}</span> {c.name} <span class="dim">· {c.by}</span></li>
+          ))}
+        </ul>
+      </section>
+
+      <section>
+        <h2>ACTIVITIES</h2>
+        {r.activities.map((a) => (
+          <div class="entry">
+            <p class="line"><b>{a.name}</b> <span class="mono dim">{a.when}</span></p>
+            <p>{a.what}</p>
+          </div>
+        ))}
+      </section>
+
+      <section>
+        <h2>BUGS</h2>
+        <ul>{r.bugs.map((b) => <li>{b}</li>)}</ul>
+        <p class="dim">Report others via <a href="/#contact">open-issue</a>.</p>
+      </section>
+
+      <section>
+        <h2>SEE ALSO</h2>
+        <p class="mono">
+          <a href={r.github} target="_blank" rel="noopener">github(1)</a>,
+          <a href={r.linkedin} target="_blank" rel="noopener">linkedin(1)</a>,
+          <a href="/#connectome">connectome(7)</a>,
+          <a href={`mailto:${r.email}`}>{r.email}</a>
+        </p>
+      </section>
+
+      <footer class="actions">
+        <a class="btn primary" href={r.pdf} download="Rohan_Paul_Resume.pdf">download PDF</a>
+        <a class="btn" href="/#contact">open-issue</a>
+      </footer>
+    </article>
+
+    <div class="manhead mono foot"><span>Rohan Paul</span><span>{today}</span><span>ROHAN(1)</span></div>
+  </main>
+</Base>
+
+<style>
+  main { padding-block: clamp(40px, 8vw, 96px); max-width: 860px; }
+  .manhead { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--ivory-dim); padding-bottom: 14px; border-bottom: 1px solid var(--rule); }
+  .manhead.foot { border-bottom: 0; border-top: 1px solid var(--rule); padding-top: 14px; margin-top: 40px; }
+  .man section { padding: 26px 0 8px; }
+  .man h2 { font-family: var(--font-mono); font-size: 0.95rem; letter-spacing: 0.08em; color: var(--mint); margin: 0 0 12px; }
+  .man p { margin: 0 0 10px; }
+  .man b { color: var(--ivory); font-weight: 600; }
+  .syn { color: var(--ivory); }
+  .syn i { color: var(--lavender); font-style: normal; }
+  .opts { margin: 0; display: grid; grid-template-columns: 11rem 1fr; gap: 10px 24px; }
+  .opts dt { color: var(--butter); }
+  .opts dd { margin: 0; }
+  .files dt a { text-decoration: none; color: var(--butter); }
+  .files dt a:hover { text-decoration: underline; }
+  .entry { margin-bottom: 18px; }
+  .line { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; margin-bottom: 2px !important; }
+  .role { color: var(--lavender); margin-bottom: 4px !important; }
+  .certs, .man ul { margin: 0; padding-left: 1.1em; display: grid; gap: 8px; }
+  .certs { list-style: none; padding-left: 0; }
+  .man li::marker { color: var(--coral); }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; padding-top: 32px; }
+  @media (max-width: 640px) {
+    .opts { grid-template-columns: 1fr; gap: 4px; }
+    .opts dd { margin-bottom: 10px; }
+    .manhead span:nth-child(2) { display: none; }
+    .actions .btn { flex: 1 1 auto; justify-content: center; }
+  }
+</style>

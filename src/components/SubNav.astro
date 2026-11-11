@@ -1,0 +1,28 @@
+---
+interface Props { crumb: string }
+const { crumb } = Astro.props;
+---
+<nav class="nav mono wrap" aria-label="Primary">
+  <a href="/" class="brand">rohan<span class="dim">@</span>paul<span class="dim">:~/</span>{crumb}</a>
+  <div class="links">
+    <a href="/#work">work</a>
+    <a href="/#connectome">connectome</a>
+    <a href="/resume">resume</a>
+    <a href="/#contact">contact</a>
+    <button type="button" class="term-btn" data-open-terminal aria-label="Open terminal" title="Open terminal (press /)">&gt;_</button>
+  </div>
+</nav>
+
+<style>
+  .nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 22px; border-bottom: 1px solid var(--rule); }
+  .brand { text-decoration: none; font-weight: 500; }
+  .links { display: flex; align-items: center; gap: clamp(14px, 3vw, 28px); }
+  .links a { text-decoration: none; color: var(--ivory-dim); padding: 8px 0; }
+  .links a:hover { color: var(--ivory); }
+  .term-btn { min-width: 36px; min-height: 32px; padding: 0 8px; border-radius: 6px; border: 1px solid var(--rule); background: transparent; color: var(--mint); font-family: var(--font-mono); font-size: 0.85rem; cursor: pointer; }
+  .term-btn:hover { border-color: var(--mint); }
+  @media (max-width: 560px) {
+    .nav { flex-wrap: wrap; padding-block: 16px 10px; }
+    .links { width: 100%; justify-content: flex-start; flex-wrap: wrap; gap: 4px 16px; font-size: 0.8rem; }
+  }
+</style>
