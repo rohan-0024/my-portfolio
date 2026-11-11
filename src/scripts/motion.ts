@@ -45,7 +45,7 @@ function hero() {
 
   const cycle = () => {
     const next = TITLES[idx++ % TITLES.length];
-    const tl = gsap.timeline({ onComplete: () => { gsap.delayedCall(2.4, cycle); } });
+    const tl = gsap.timeline({ onComplete: () => { gsap.delayedCall(1.75, cycle); } });
     eraseFrom(tl, out, 0.03);
     typeInto(tl, out, next, 0.05);
   };
