@@ -74,8 +74,8 @@ export const nodes: BrainNode[] = [
   { id: 'vercel', label: 'Vercel', kind: 'tool', tag: 'cloud', desc: 'Preview URL on every push. Two services behind one domain for Scriptorium.' },
   { id: 'render', label: 'Render', kind: 'tool', tag: 'cloud', desc: 'Free dyno for the VoltRoute API.' },
   { id: 'serverless', label: 'Serverless', kind: 'concept', tag: 'cloud', desc: 'Cold starts are real. Keep the bundle small and cache in the warm container.' },
-  { id: 'azure', label: 'Azure (AZ-104)', kind: 'tool', tag: 'cloud', desc: 'Administrator track in progress. Compute, networking, identity.', status: 'learning' },
-  { id: 'devsecops', label: 'DevSecOps', kind: 'concept', tag: 'cloud', desc: 'Security gates inside the pipeline, not after it.', status: 'learning' },
+  { id: 'azure', label: 'Azure (AZ-104)', kind: 'tool', tag: 'cloud', desc: 'Azure Administrator track completed. Compute, networking, storage, identity.' },
+  { id: 'devsecops', label: 'DevSecOps', kind: 'concept', tag: 'cloud', desc: 'Security gates inside the pipeline, not after it. Patient-portal pipeline project.' },
 
   // ---- data
   { id: 'python', label: 'Python', kind: 'tool', tag: 'data', desc: 'Training, validation and data generation.' },
@@ -85,6 +85,7 @@ export const nodes: BrainNode[] = [
   { id: 'model-serving', label: 'Model serving', kind: 'concept', tag: 'data', desc: 'Export weights as JSON, serve in Node, prove the port matches Python.' },
   { id: 'crawling', label: 'Live data crawling', kind: 'concept', tag: 'data', desc: 'RBI rates, MoSPI CPI, telecom plan APIs. Parallel, timed out, cached.' },
   { id: 'servicenow', label: 'ServiceNow ML', kind: 'tool', tag: 'data', desc: 'Churn prediction on the Now platform.' },
+  { id: 'powerbi', label: 'Power BI', kind: 'tool', tag: 'data', desc: 'Dashboards and DAX. Turning scored data into something a lender can read at a glance.', status: 'learning' },
 
   // ---- databases
   { id: 'sqlite', label: 'SQLite', kind: 'tool', tag: 'database', desc: 'A file is a database. Local-first with no server to install.' },
@@ -130,7 +131,7 @@ export const links: [string, string][] = [
   ['lambda', 'serverless'], ['lambda', 'apigw'], ['sam', 'lambda'], ['lambda', 'node'],
   // data
   ['d-data', 'python'], ['d-data', 'sklearn'], ['d-data', 'xgboost'], ['d-data', 'explainable'], ['d-data', 'model-serving'],
-  ['d-data', 'crawling'], ['d-data', 'servicenow'],
+  ['d-data', 'crawling'], ['d-data', 'servicenow'], ['d-data', 'powerbi'], ['powerbi', 'sqlite'],
   ['python', 'sklearn'], ['python', 'xgboost'], ['sklearn', 'model-serving'], ['model-serving', 'node'], ['explainable', 'sklearn'],
   // databases
   ['d-db', 'sqlite'], ['d-db', 'turso'], ['d-db', 'dynamodb'], ['d-db', 'firestore'], ['d-db', 'mysql'], ['d-db', 'ttl'],
