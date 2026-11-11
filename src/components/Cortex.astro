@@ -1,0 +1,111 @@
+---
+import { nodes, links } from '../data/brain';
+const counts = {
+  nodes: nodes.length,
+  links: links.length,
+  learning: nodes.filter((n) => n.status === 'learning').length,
+};
+---
+<section id="cortex" class="reveal">
+  <div class="wrap">
+    <p class="eyebrow">cat ./brain --graph</p>
+    <h2>Brain Cortex.</h2>
+    <p class="intro dim">
+      Everything I've learned, as one graph. Hubs are domains, ivory nodes are things I shipped,
+      dots are tools, rings are ideas I learned the hard way. Dashed rings are still in progress.
+    </p>
+
+    <div class="cortex" data-cortex>
+      <div class="toolbar">
+        <div class="legend mono" data-legend aria-label="Filter by domain"></div>
+        <div class="zoom">
+          <button type="button" class="ic" data-zoom-out aria-label="Zoom out">−</button>
+          <button type="button" class="ic" data-zoom-in aria-label="Zoom in">+</button>
+          <button type="button" class="ic mono" data-reset aria-label="Reset view">reset</button>
+        </div>
+      </div>
+
+      <div class="stage">
+        <canvas aria-label="Interactive 3D graph of skills, tools, concepts and projects" role="img"></canvas>
+        <p class="hint mono" data-hint>drag to orbit · tap a node · ctrl+scroll to zoom</p>
+        <aside class="card" data-card hidden></aside>
+        <p class="stats mono">{counts.nodes} nodes · {counts.links} links · {counts.learning} in progress</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initCortex } from '../scripts/cortex';
+  const root = document.querySelector<HTMLElement>('[data-cortex]');
+  if (root) initCortex(root);
+</script>
+
+<style>
+  .intro { max-width: 62ch; margin: 0 0 24px; }
+  .cortex { border: 1px solid var(--rule); border-radius: 16px; background: var(--ink-2); overflow: hidden; }
+  .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 14px; border-bottom: 1px solid var(--rule); flex-wrap: wrap; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px; }
+  .legend :global(.lg) {
+    display: inline-flex; align-items: center; gap: 7px;
+    min-height: 32px; padding: 4px 11px;
+    border-radius: 999px; border: 1px solid var(--rule);
+    background: transparent; color: var(--ivory-dim);
+    font-family: var(--font-mono); font-size: 0.74rem; cursor: pointer;
+    transition: border-color 140ms ease, color 140ms ease, background 140ms ease;
+  }
+  .legend :global(.lg:hover) { color: var(--ivory); border-color: var(--ivory-dim); }
+  .legend :global(.lg.is-on) { color: var(--ink); background: var(--ivory); border-color: var(--ivory); }
+  .legend :global(.swatch), .card :global(.swatch) { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .zoom { display: flex; gap: 6px; }
+  .ic { min-width: 36px; min-height: 36px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--rule); background: transparent; color: var(--ivory); cursor: pointer; font-size: 1rem; }
+  .ic:hover { border-color: var(--ivory-dim); }
+  .ic.mono { font-size: 0.74rem; }
+
+  .stage { position: relative; height: clamp(420px, 70vh, 720px); }
+  canvas {
+    width: 100%; height: 100%; display: block;
+    touch-action: pan-y pinch-zoom; /* vertical swipes still scroll the page on phones */
+    background:
+      radial-gradient(ellipse 70% 60% at 50% 50%, rgba(205,180,255,0.06), transparent 70%),
+      var(--ink);
+  }
+  .hint { position: absolute; left: 14px; bottom: 12px; margin: 0; font-size: 0.72rem; color: var(--ivory-dim); pointer-events: none; }
+  .stats { position: absolute; right: 14px; bottom: 12px; margin: 0; font-size: 0.72rem; color: var(--ivory-dim); pointer-events: none; }
+
+  .card {
+    position: absolute; top: 14px; right: 14px;
+    width: min(340px, calc(100% - 28px));
+    padding: 18px 18px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--c, var(--ivory));
+    background: rgba(21, 21, 26, 0.92);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.45);
+  }
+  .card :global(.close) { position: absolute; top: 8px; right: 8px; width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--rule); background: transparent; color: var(--ivory-dim); font-size: 1.1rem; cursor: pointer; }
+  .card :global(.close:hover) { color: var(--ivory); }
+  .card :global(.kicker) { display: flex; align-items: center; gap: 8px; margin: 0 0 6px; font-size: 0.72rem; color: var(--ivory-dim); }
+  .card :global(.kicker em) { color: var(--butter); font-style: normal; }
+  .card :global(h3) { font-size: 1.25rem; margin: 0 0 8px; }
+  .card :global(.desc) { margin: 0 0 14px; font-size: 0.92rem; color: var(--ivory); }
+  .card :global(.links-label) { margin: 0 0 8px; font-size: 0.72rem; color: var(--ivory-dim); }
+  .card :global(.links) { display: flex; flex-wrap: wrap; gap: 6px; max-height: 120px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--rule) transparent; }
+  .card :global(.tag) { cursor: pointer; background: transparent; border-color: color-mix(in srgb, var(--c) 40%, transparent); color: var(--ivory); min-height: 28px; }
+  .card :global(.tag:hover) { border-color: var(--c); color: var(--c); }
+
+  @media (max-width: 640px) {
+    .toolbar { padding: 10px 12px; gap: 8px; }
+    /* One scrollable row of filters instead of a tall wrapped block. */
+    .legend { flex-wrap: nowrap; overflow-x: auto; width: 100%; padding-bottom: 2px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .legend::-webkit-scrollbar { display: none; }
+    .legend :global(.lg) { flex-shrink: 0; }
+    .zoom { width: 100%; justify-content: flex-end; }
+    .stage { height: clamp(380px, 62vh, 560px); }
+    .card { top: auto; bottom: 36px; left: 10px; right: 10px; width: auto; padding: 14px; }
+    .card :global(.links) { max-height: 84px; }
+    .hint { font-size: 0.66rem; }
+    .stats { display: none; }
+  }
+</style>

@@ -1,0 +1,80 @@
+---
+const key = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
+---
+<section id="contact" class="reveal">
+  <div class="wrap grid">
+    <div class="pitch">
+      <p class="eyebrow">open-issue</p>
+      <h2>Something broken? Something to build?</h2>
+      <p class="dim">
+        Describe the problem the way you'd file a bug. I'll reply with a plan, not a pitch.
+      </p>
+      <p class="mono alt">
+        or email <a href="mailto:rohanpaul2468@gmail.com">rohanpaul2468@gmail.com</a>
+      </p>
+    </div>
+
+    <form data-contact method="POST" action="https://api.web3forms.com/submit" novalidate>
+      <input type="hidden" name="access_key" value={key} />
+      <input type="hidden" name="subject" value="New issue from the portfolio" />
+      <input type="hidden" name="from_name" value="Portfolio contact form" />
+      <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+      <label>
+        <span class="mono">name</span>
+        <input type="text" name="name" required autocomplete="name" placeholder="Ada Lovelace" />
+      </label>
+      <label>
+        <span class="mono">email</span>
+        <input type="email" name="email" required autocomplete="email" placeholder="you@example.com" />
+      </label>
+      <label>
+        <span class="mono">issue</span>
+        <textarea name="message" required rows="5" placeholder="Expected: ... Actual: ... Steps: ..."></textarea>
+      </label>
+
+      <div class="foot">
+        <button type="submit" class="btn primary">send</button>
+        <p class="mono status" data-status aria-live="polite"></p>
+      </div>
+    </form>
+  </div>
+</section>
+
+<footer class="wrap mono dim">
+  <span>&copy; {new Date().getFullYear()} Rohan Paul</span>
+  <span>built with Astro · several bugs were harmed in the making · exit 0</span>
+</footer>
+
+<style>
+  .grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 48px; align-items: start; }
+  .pitch h2 { max-width: 14ch; }
+  .pitch .dim { max-width: 40ch; }
+  .alt { margin-top: 28px; }
+  form { display: grid; gap: 18px; padding: 28px; border: 1px solid var(--rule); border-radius: 14px; background: var(--ink-2); }
+  label { display: grid; gap: 8px; }
+  label > .mono { color: var(--ivory-dim); }
+  input:not([type=hidden]):not(.hp), textarea {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--rule);
+    background: var(--ink);
+    color: var(--ivory);
+    font-size: 16px; /* prevents iOS zoom on focus */
+    transition: border-color 160ms ease;
+  }
+  textarea { resize: vertical; }
+  input:focus, textarea:focus { border-color: var(--mint); outline: none; }
+  input::placeholder, textarea::placeholder { color: rgba(243, 239, 228, 0.3); }
+  .hp { position: absolute; left: -9999px; opacity: 0; }
+  .foot { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .status { margin: 0; color: var(--mint); min-height: 1.4em; }
+  footer { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 24px 0 calc(24px + env(safe-area-inset-bottom)); border-top: 1px solid var(--rule); font-size: 0.78rem; }
+  @media (max-width: 820px) {
+    .grid { grid-template-columns: 1fr; gap: 32px; }
+    form { padding: 20px; }
+    .foot .btn { width: 100%; justify-content: center; }
+  }
+</style>

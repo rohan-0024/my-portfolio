@@ -1,0 +1,111 @@
+---
+import { projects } from '../data/projects';
+---
+<section id="work" class="reveal">
+  <div class="wrap">
+    <p class="eyebrow">cat ./projects</p>
+    <h2>Problems I've actually fixed.</h2>
+    <p class="intro dim">Each entry is a problem, the fix, and the stack. Click one to read the notes.</p>
+
+    <div class="entries">
+      {projects.map((p) => (
+        <details class={`entry accent-${p.accent}`} id={p.slug}>
+          <summary>
+            <span class="head">
+              <span class="v mono">{p.version}</span>
+              <span class="name">{p.name}</span>
+              <span class="tagline dim">{p.tagline}</span>
+            </span>
+            <span class="chev" aria-hidden="true">+</span>
+          </summary>
+          <div class="entry-body">
+            <div class="inner">
+              <dl class="rows">
+                <div class="row">
+                  <dt class="mono">problem</dt>
+                  <dd>{p.problem}</dd>
+                </div>
+                <div class="row">
+                  <dt class="mono">fix</dt>
+                  <dd>{p.fix}</dd>
+                </div>
+                <div class="row">
+                  <dt class="mono">stack</dt>
+                  <dd class="tags">{p.stack.map((s) => <span class="tag">{s}</span>)}</dd>
+                </div>
+              </dl>
+              <ul class="notes">
+                {p.notes.map((n) => <li>{n}</li>)}
+              </ul>
+              <div class="actions">
+                {p.live ? (
+                  <a class="btn primary" href={p.live} target="_blank" rel="noopener">open live site</a>
+                ) : (
+                  <span class="btn ghost" aria-disabled="true">not deployed publicly</span>
+                )}
+              </div>
+            </div>
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .intro { max-width: 52ch; margin: 0 0 36px; }
+  .entries { border-top: 1px solid var(--rule); }
+  .entry { border-bottom: 1px solid var(--rule); }
+  summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 22px 0;
+    min-height: 44px;
+  }
+  summary::-webkit-details-marker { display: none; }
+  .head { display: grid; grid-template-columns: 6.5rem auto 1fr; gap: 6px 20px; align-items: baseline; flex: 1; min-width: 0; }
+  .v { color: var(--accent); }
+  .name { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.25rem, 2.6vw, 1.7rem); letter-spacing: -0.02em; }
+  .tagline { font-size: 0.98rem; }
+  .chev {
+    font-family: var(--font-mono);
+    font-size: 1.4rem;
+    color: var(--accent);
+    width: 36px; height: 36px;
+    display: grid; place-items: center;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    transition: transform 240ms ease, background 160ms ease;
+    flex-shrink: 0;
+  }
+  summary:hover .chev { background: var(--ink-2); }
+  .entry[open] .chev { transform: rotate(45deg); }
+  .entry-body { overflow: hidden; }
+  .inner {
+    padding: 8px 0 30px;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 32px 48px;
+    border-top: 1px dashed var(--rule);
+    padding-top: 24px;
+  }
+  .rows { margin: 0; }
+  .row { display: grid; grid-template-columns: 6.5rem 1fr; gap: 12px 20px; padding: 10px 0; }
+  .row + .row { border-top: 1px solid var(--rule); }
+  dt { color: var(--accent); }
+  dd { margin: 0; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .notes { margin: 0; padding-left: 1.1em; color: var(--ivory-dim); font-size: 0.95rem; display: grid; gap: 10px; align-content: start; }
+  .notes li::marker { color: var(--accent); }
+  .actions { grid-column: 1 / -1; display: flex; gap: 12px; }
+  .ghost { color: var(--ivory-dim); cursor: default; }
+  @media (max-width: 760px) {
+    .head { grid-template-columns: 1fr; gap: 2px; }
+    .inner { grid-template-columns: 1fr; gap: 24px; }
+    .row { grid-template-columns: 1fr; gap: 4px; }
+  }
+</style>

@@ -1,0 +1,70 @@
+---
+---
+<section class="hero" id="top">
+  <div class="wrap">
+    <nav class="nav mono" aria-label="Primary">
+      <a href="#top" class="brand">rohan<span class="dim">@</span>paul</a>
+      <div class="links">
+        <a href="#changelog">changelog</a>
+        <a href="#work">work</a>
+        <a href="#stack">stack</a>
+        <a href="#cortex">cortex</a>
+        <a href="#contact">contact</a>
+      </div>
+    </nav>
+
+    <div class="terminal">
+      <p class="prompt mono">
+        <span class="dim">rohan@dev:~$</span>
+        <span data-type-cmd="whoami">whoami</span>
+      </p>
+      <h1>
+        <span class="name">Rohan Paul</span>
+        <span class="role"><span data-type-out>Data Engineer</span><span class="cursor" aria-hidden="true"></span></span>
+      </h1>
+      <div data-hero-rest hidden>
+        <p class="origin mono">
+          <span class="dim">// 2023:</span> started a CSE degree in Cloud Computing with a thousand self-doubts and zero deployed projects.
+          <span class="dim">// now:</span> the doubts are still there. So are the deployments.
+        </p>
+        <p class="lede">
+          I build systems that keep working when the network, the data, or the user doesn't cooperate.
+          Scoring models that fall back gracefully. Reminders that fire exactly once. APIs that never leak a key.
+        </p>
+        <div class="actions">
+          <a href="#work" class="btn primary">cat ./projects</a>
+          <a href="#contact" class="btn">open-issue</a>
+          <a href="https://github.com/rohan-0024" class="btn" target="_blank" rel="noopener">github</a>
+          <a href="https://www.linkedin.com/in/rohan-paul-b5181a288" class="btn" target="_blank" rel="noopener">linkedin</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero { min-height: 100svh; display: flex; flex-direction: column; padding-block: 0; }
+  .hero .wrap { display: flex; flex-direction: column; flex: 1; }
+  .nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 22px; border-bottom: 1px solid var(--rule); }
+  .brand { text-decoration: none; font-weight: 500; }
+  .links { display: flex; gap: clamp(14px, 3vw, 28px); }
+  .links a { text-decoration: none; color: var(--ivory-dim); padding: 8px 0; }
+  .links a:hover { color: var(--ivory); }
+  .terminal { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-block: clamp(48px, 10vw, 96px); }
+  .prompt { margin: 0 0 18px; }
+  h1 { display: flex; flex-direction: column; gap: 0.1em; font-size: clamp(2.4rem, 8vw, 5.4rem); font-weight: 600; }
+  .name { color: var(--ivory); }
+  .role { color: var(--lavender); font-weight: 500; font-size: 0.62em; display: inline-flex; align-items: baseline; min-height: 1.25em; }
+  .cursor { display: inline-block; width: 0.5em; height: 1em; margin-left: 0.12em; background: var(--coral); transform: translateY(0.12em); animation: blink 1.1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .origin { max-width: 62ch; margin: 28px 0 0; color: var(--butter); line-height: 1.7; }
+  .origin .dim { display: block; margin-top: 6px; }
+  .origin .dim:first-child { margin-top: 0; }
+  .lede { max-width: 58ch; font-size: clamp(1.02rem, 1.6vw, 1.2rem); color: var(--ivory-dim); margin: 20px 0 32px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  @media (max-width: 560px) {
+    .nav { flex-wrap: wrap; padding-block: 16px 10px; }
+    .links { width: 100%; justify-content: space-between; gap: 8px; font-size: 0.8rem; }
+    .actions .btn { flex: 1 1 auto; justify-content: center; }
+  }
+</style>

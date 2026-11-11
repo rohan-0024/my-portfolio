@@ -1,0 +1,79 @@
+---
+import { stack } from '../data/projects';
+const id = (name: string) => `tool-${name.replace(/[^a-z0-9]/gi, '').toLowerCase()}`;
+---
+<section id="stack" class="reveal">
+  <div class="wrap">
+    <p class="eyebrow">ls ./stack</p>
+    <h2>Tools, and where each one earned its place.</h2>
+    <p class="intro dim">Tap a tool to open its card.</p>
+
+    <ul class="stack">
+      {stack.map((t, i) => (
+        <li class={`stack-item accent-${['mint', 'lavender', 'butter'][i % 3]}`}>
+          <button type="button" class="chip" aria-expanded="false" aria-controls={id(t.name)}>
+            <span class="dot" aria-hidden="true"></span>
+            {t.name}
+          </button>
+          <div class="card" id={id(t.name)} role="region" aria-label={`${t.name} details`}>
+            <div class="card-inner">
+              <p class="label mono">what</p>
+              <p class="text">{t.what}</p>
+              <p class="label mono">where</p>
+              <p class="text">{t.where}</p>
+              <p class="label mono">used in</p>
+              <p class="tags">{t.projects.map((p) => <span class="tag">{p}</span>)}</p>
+            </div>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .intro { margin: 0 0 24px; }
+  .stack { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+  .stack-item { display: contents; }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: 1px solid var(--rule);
+    background: var(--ink-2);
+    color: var(--ivory);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); opacity: 0.7; }
+  .chip:hover { border-color: var(--accent); }
+  .stack-item.is-open .chip { border-color: var(--accent); color: var(--accent); background: var(--ink-3); }
+
+  /* The card breaks onto its own full-width row beneath the chips, so chips never jump around. */
+  .card { display: none; flex-basis: 100%; overflow: hidden; margin-top: 6px; }
+  .stack-item.is-open .card { display: block; }
+  .card-inner {
+    display: grid;
+    grid-template-columns: 6rem 1fr;
+    gap: 10px 20px;
+    align-items: baseline;
+    padding: 20px 22px;
+    border-radius: 12px;
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--accent);
+    background: var(--ink-2);
+  }
+  .label { margin: 0; color: var(--accent); }
+  .text { margin: 0; }
+  .tags { margin: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  @media (max-width: 600px) {
+    .card-inner { grid-template-columns: 1fr; gap: 4px; padding: 16px; }
+    .label { margin-top: 10px; }
+    .label:first-child { margin-top: 0; }
+  }
+</style>

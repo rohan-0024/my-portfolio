@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@600;700&display=swap" />
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    background: #0a0a0c;
+    color: #f3efe4;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    padding: 64px 72px;
+    background-image:
+      repeating-linear-gradient(to bottom, transparent 0, transparent 31px, rgba(243,239,228,0.08) 31px, rgba(243,239,228,0.08) 32px),
+      radial-gradient(ellipse 70% 60% at 15% 0%, rgba(205,180,255,0.14), transparent 60%),
+      radial-gradient(ellipse 60% 50% at 95% 100%, rgba(184,242,214,0.12), transparent 60%);
+  }
+  .margin { position: absolute; top: 0; bottom: 0; left: 52px; width: 1px; background: rgba(255,92,92,0.45); }
+  .prompt { font-family: 'JetBrains Mono', monospace; font-size: 24px; color: rgba(243,239,228,0.62); margin-bottom: 26px; }
+  .prompt b { color: #f3efe4; font-weight: 500; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-size: 96px; line-height: 1; letter-spacing: -0.03em; font-weight: 700; }
+  .role { font-family: 'Space Grotesk', sans-serif; font-size: 40px; color: #cdb4ff; font-weight: 600; margin-top: 16px; display: flex; align-items: center; gap: 18px; white-space: nowrap; }
+  .role .sep { color: rgba(243,239,228,0.3); font-weight: 400; }
+  .cursor { display: inline-block; width: 20px; height: 44px; background: #ff5c5c; margin-left: 4px; }
+  .line { font-family: 'JetBrains Mono', monospace; font-size: 26px; color: #ffe6a7; margin-top: 54px; line-height: 1.5; }
+  .line .c { color: rgba(243,239,228,0.5); }
+  .foot { position: absolute; left: 72px; right: 72px; bottom: 52px; display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 20px; color: rgba(243,239,228,0.55); }
+  .foot .dot { color: #b8f2d6; }
+</style>
+</head>
+<body>
+  <div class="margin"></div>
+  <p class="prompt">rohan@dev:~$ <b>whoami</b></p>
+  <h1>Rohan Paul</h1>
+  <p class="role">Data Engineer <span class="sep">·</span> Software Engineer <span class="sep">·</span> Cloud Architect<span class="cursor"></span></p>
+  <p class="line"><span class="c">// </span>I build systems that keep working when the network,<br><span class="c">// </span>the data, or the user doesn't cooperate.</p>
+  <div class="foot">
+    <span><span class="dot">●</span> 65 nodes · 139 links · 3 shipped</span>
+    <span>exit 0</span>
+  </div>
+</body>
+</html>

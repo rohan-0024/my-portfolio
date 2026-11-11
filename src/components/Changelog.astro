@@ -1,0 +1,31 @@
+---
+import { changelog } from '../data/projects';
+---
+<section id="changelog" class="reveal">
+  <div class="wrap">
+    <p class="eyebrow">git log --oneline me</p>
+    <h2>Changelog, not a bio.</h2>
+    <p class="intro dim">
+      Adjectives are cheap. Here is what actually shipped, and what each one taught me.
+    </p>
+    <ol class="log">
+      {changelog.map((e) => (
+        <li>
+          <span class="v mono">{e.v}</span>
+          <span class="text">{e.text}</span>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .intro { max-width: 52ch; margin: 0 0 36px; }
+  .log { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+  .log li { display: grid; grid-template-columns: 7.5rem 1fr; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--rule); align-items: baseline; }
+  .v { color: var(--mint); }
+  .text { color: var(--ivory); }
+  @media (max-width: 600px) {
+    .log li { grid-template-columns: 1fr; gap: 6px; }
+  }
+</style>

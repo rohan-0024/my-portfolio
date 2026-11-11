@@ -1,0 +1,136 @@
+:root {
+  --ink: #0a0a0c;
+  --ink-2: #15151a;
+  --ink-3: #1f1f26;
+  --ivory: #f3efe4;
+  --ivory-dim: rgba(243, 239, 228, 0.62);
+  --ivory-faint: rgba(243, 239, 228, 0.1);
+  --rule: rgba(243, 239, 228, 0.14);
+  --mint: #b8f2d6;
+  --lavender: #cdb4ff;
+  --butter: #ffe6a7;
+  --coral: #ff5c5c;
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Space Grotesk', var(--font-sans);
+  --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  --gutter: clamp(16px, 5vw, 64px);
+  --line: 32px;
+  --max: 1080px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--ivory);
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+/* Ruled-notebook background: ivory hairlines plus a soft pastel wash. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--line) - 1px), var(--ivory-faint) calc(var(--line) - 1px), var(--ivory-faint) var(--line)),
+    radial-gradient(ellipse 80% 60% at 20% 0%, rgba(205, 180, 255, 0.08), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 100%, rgba(184, 242, 214, 0.07), transparent 60%);
+}
+/* Notebook margin rule, wide screens only. */
+@media (min-width: 900px) {
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0; bottom: 0;
+    left: calc(var(--gutter) - 20px);
+    width: 1px;
+    background: rgba(255, 92, 92, 0.28);
+    z-index: -1;
+    pointer-events: none;
+  }
+}
+
+a { color: inherit; text-decoration-color: var(--ivory-dim); text-underline-offset: 3px; }
+a:hover { text-decoration-color: var(--coral); }
+img, svg { display: block; max-width: 100%; }
+button, input, textarea { font: inherit; color: inherit; }
+::selection { background: var(--lavender); color: var(--ink); }
+
+.wrap { width: min(100% - 2 * var(--gutter), var(--max)); margin-inline: auto; }
+section { padding-block: clamp(56px, 10vw, 128px); }
+.mono { font-family: var(--font-mono); font-size: 0.86rem; letter-spacing: 0.01em; }
+.dim { color: var(--ivory-dim); }
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--ivory-dim);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 20px;
+}
+.eyebrow::before { content: '$'; color: var(--coral); }
+.eyebrow::after { content: ''; flex: 1; height: 1px; background: var(--rule); }
+
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.1; letter-spacing: -0.02em; margin: 0; }
+h2 { font-size: clamp(1.7rem, 4vw, 2.6rem); margin-bottom: 28px; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ivory);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+}
+.btn:hover { border-color: var(--ivory-dim); transform: translateY(-1px); }
+.btn.primary { background: var(--coral); border-color: var(--coral); color: var(--ink); font-weight: 600; }
+.btn.primary:hover { background: #ff7070; }
+.btn:disabled { opacity: 0.6; cursor: wait; }
+.btn:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible {
+  outline: 2px solid var(--mint);
+  outline-offset: 3px;
+}
+
+.tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--rule);
+  color: var(--ivory-dim);
+  white-space: nowrap;
+}
+.accent-mint { --accent: var(--mint); }
+.accent-lavender { --accent: var(--lavender); }
+.accent-butter { --accent: var(--butter); }
+
+/* Reveal-on-scroll targets. JS adds .is-in; without JS everything stays visible. */
+.reveal { opacity: 1; transform: none; }
+.js .reveal { opacity: 0; transform: translateY(18px); }
+.js .reveal.is-in { opacity: 1; transform: none; transition: opacity 600ms ease, transform 600ms cubic-bezier(.2,.7,.2,1); }
+/* Safety net: if the reveal script never runs, everything appears anyway after 2s. */
+.js .reveal { animation: reveal-fallback 400ms ease 2s forwards; }
+@keyframes reveal-fallback { to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .js .reveal { opacity: 1; transform: none; transition: none; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
