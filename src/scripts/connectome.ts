@@ -4,6 +4,11 @@
  * then the whole cloud is rotated and perspective-projected every frame.
  */
 import { nodes as DATA_NODES, links as DATA_LINKS, TAG_META, type BrainNode, type Tag } from '../data/brain';
+import { projects } from '../data/projects';
+
+/** Project entries on the page are `#<slug>`; their graph nodes are `p-<slug>`. */
+const PROJECT_SLUGS = new Set(projects.map((p) => p.slug));
+const slugOf = (nodeId: string) => (nodeId.startsWith('p-') && PROJECT_SLUGS.has(nodeId.slice(2)) ? nodeId.slice(2) : null);
 
 type SimNode = BrainNode & {
   x: number; y: number; z: number;
@@ -21,6 +26,7 @@ export function initConnectome(root: HTMLElement) {
   const card = root.querySelector<HTMLElement>('[data-card]');
   const legend = root.querySelector<HTMLElement>('[data-legend]');
   const hint = root.querySelector<HTMLElement>('[data-hint]');
+  const litLine = root.querySelector<HTMLElement>('[data-lit]');
   if (!canvas || !card || !legend) return;
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
@@ -94,6 +100,7 @@ export function initConnectome(root: HTMLElement) {
   let targetYaw = yaw, targetPitch = pitch;
   let hovered: SimNode | null = null;
   let selected: SimNode | null = null;
+  let lit: SimNode | null = null;        // project node lit from the work section (no card)
   let focusTag: Tag | null = null;
   let lastInteraction = 0;
   let dragging = false;
@@ -134,7 +141,7 @@ export function initConnectome(root: HTMLElement) {
   };
 
   const activeSet = (): Set<string> | null => {
-    const a = selected ?? hovered;
+    const a = selected ?? hovered ?? lit;
     if (a) { const s = new Set(a.neighbors); s.add(a.id); return s; }
     return null;
   };
@@ -157,7 +164,8 @@ export function initConnectome(root: HTMLElement) {
     ctx.lineWidth = 1;
     for (const [a, b] of links) {
       const depth = 1 - ((a.pz + b.pz) / 2 + layoutR) / (2 * layoutR); // 0 far .. 1 near
-      const isActive = active ? active.has(a.id) && active.has(b.id) && (a === (selected ?? hovered) || b === (selected ?? hovered)) : false;
+      const fc = selected ?? hovered ?? lit;
+      const isActive = active ? active.has(a.id) && active.has(b.id) && (a === fc || b === fc) : false;
       const focused = inFocus(a) && inFocus(b);
       let alpha = 0.05 + 0.14 * Math.max(0, Math.min(1, depth));
       if (active) alpha = isActive ? 0.75 : alpha * 0.25;
@@ -172,7 +180,7 @@ export function initConnectome(root: HTMLElement) {
     ctx.textBaseline = 'middle';
     for (const n of sorted) {
       const depth = Math.max(0, Math.min(1, 1 - (n.pz + layoutR) / (2 * layoutR)));
-      const r = n.r * n.ps * (n === hovered || n === selected ? 1.35 : 1);
+      const r = n.r * n.ps * (n === hovered || n === selected || n === lit ? 1.35 : 1);
       let alpha = 0.45 + 0.55 * depth;
       const isActive = active ? active.has(n.id) : true;
       if (active && !isActive) alpha *= 0.18;
@@ -180,7 +188,7 @@ export function initConnectome(root: HTMLElement) {
       const c = color(n);
 
       // glow for hubs and active
-      if (n.kind !== 'tool' && n.kind !== 'concept' || n === hovered || n === selected) {
+      if (n.kind !== 'tool' && n.kind !== 'concept' || n === hovered || n === selected || (lit && active?.has(n.id))) {
         const g = ctx.createRadialGradient(n.px, n.py, r * 0.4, n.px, n.py, r * 3);
         g.addColorStop(0, withAlpha(c, 0.25 * alpha));
         g.addColorStop(1, withAlpha(c, 0));
@@ -221,7 +229,7 @@ export function initConnectome(root: HTMLElement) {
   // ---------- loop
   const tick = (t: number) => {
     if (!running) return;
-    const idle = t - lastInteraction > 2500 && !dragging && !selected;
+    const idle = t - lastInteraction > 2500 && !dragging && !selected && !lit;
     if (idle && !reduced()) targetYaw += 0.0022;
     yaw += (targetYaw - yaw) * 0.12;
     pitch += (targetPitch - pitch) * 0.12;
@@ -254,26 +262,80 @@ export function initConnectome(root: HTMLElement) {
     const kindLabel = n.kind === 'domain' ? 'domain' : n.kind === 'project' ? 'project' : n.kind === 'concept' ? 'concept' : 'tool';
     const neighbors = [...n.neighbors].map((id) => byId.get(id)!).filter(Boolean)
       .sort((a, b) => (a.kind === 'domain' ? -1 : b.kind === 'domain' ? 1 : a.label.localeCompare(b.label)));
+    // Projects on this page that used the node (or the node itself, if it is one of them).
+    const usedIn = (slugOf(n.id) ? [n] : neighbors.filter((m) => slugOf(m.id))) as SimNode[];
     card.innerHTML = `
       <button type="button" class="close" aria-label="Close" data-close>×</button>
       <p class="kicker mono"><span class="swatch" style="background:${meta.color}"></span>${meta.label} · ${kindLabel}${n.status === 'learning' ? ' · <em>learning</em>' : ''}</p>
       <h3>${n.label}</h3>
       <p class="desc">${n.desc}</p>
+      ${usedIn.length ? `<p class="mono links-label">used in</p>
+      <div class="links">${usedIn.map((m) => `<button type="button" class="tag proj" data-project="${slugOf(m.id)}" style="--c:${TAG_META[m.tag].color}">${m.label} <span aria-hidden="true">↑</span></button>`).join('')}</div>` : ''}
       <p class="mono links-label">linked to (${neighbors.length})</p>
-      <div class="links">${neighbors.map((m) => `<button type="button" class="tag" data-goto="${m.id}" style="--c:${TAG_META[m.tag].color}">${m.label}</button>`).join('')}</div>
+      <div class="links">${neighbors.filter((m) => !usedIn.includes(m)).map((m) => `<button type="button" class="tag" data-goto="${m.id}" style="--c:${TAG_META[m.tag].color}">${m.label}</button>`).join('')}</div>
     `;
+    markEntries(usedIn.map((m) => slugOf(m.id)!));
     card.hidden = false;
     card.style.setProperty('--c', meta.color);
     hint?.setAttribute('hidden', '');
     lastInteraction = performance.now();
   };
-  const hideCard = () => { selected = null; card.hidden = true; lastInteraction = performance.now(); };
+  const hideCard = () => { selected = null; card.hidden = true; markEntries([]); lastInteraction = performance.now(); };
+
+  // ---------- bridge to the work section
+  /** Outline the project entries that used the selected node. */
+  const markEntries = (slugs: string[]) => {
+    document.querySelectorAll<HTMLElement>('details.entry').forEach((d) => d.classList.toggle('is-lit', slugs.includes(d.id)));
+  };
+  /** Scroll to a project entry and open it. */
+  const gotoProject = (slug: string) => {
+    const d = document.getElementById(slug) as HTMLDetailsElement | null;
+    if (!d) return;
+    if (!d.open) d.open = true; // fires `toggle`, which lights this project in the graph
+    d.scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth', block: 'start' });
+  };
+  const setLit = (n: SimNode | null) => {
+    lit = n;
+    if (litLine) {
+      litLine.hidden = !n;
+      if (n) litLine.innerHTML = `lit: <b>${n.label}</b> · ${n.neighbors.size} nodes · <button type="button" class="lnk" data-unlight>clear</button>`;
+    }
+    lastInteraction = performance.now();
+    if (!running) draw();
+  };
+  litLine?.addEventListener('click', (ev) => {
+    if ((ev.target as HTMLElement).closest('[data-unlight]')) {
+      setLit(null);
+      document.querySelectorAll<HTMLDetailsElement>('details.entry[open]').forEach((d) => { d.open = false; });
+    }
+  });
+  // Project entries report open/close through `toggle` on each <details>; the most recently opened one is lit.
+  document.querySelectorAll<HTMLDetailsElement>('details.entry').forEach((d) => {
+    d.addEventListener('toggle', () => {
+      if (d.open) setLit(byId.get(`p-${d.id}`) ?? null);
+      else if (lit?.id === `p-${d.id}`) {
+        const other = [...document.querySelectorAll<HTMLDetailsElement>('details.entry[open]')].pop();
+        setLit(other ? byId.get(`p-${other.id}`) ?? null : null);
+      }
+    });
+  });
+  // "trace in connectome" links inside the entries: light the project and bring the graph into view.
+  document.addEventListener('click', (ev) => {
+    const a = (ev.target as HTMLElement).closest<HTMLElement>('[data-trace]');
+    if (!a) return;
+    ev.preventDefault();
+    const n = byId.get(`p-${a.dataset.trace}`);
+    if (n) setLit(n);
+    (document.getElementById('connectome') ?? root).scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth', block: 'start' });
+  });
 
   card.addEventListener('click', (ev) => {
     const t = ev.target as HTMLElement;
     if (t.closest('[data-close]')) hideCard();
     const go = t.closest<HTMLElement>('[data-goto]')?.dataset.goto;
     if (go) { const n = byId.get(go); if (n) showCard(n); }
+    const slug = t.closest<HTMLElement>('[data-project]')?.dataset.project;
+    if (slug) gotoProject(slug);
   });
 
   // ---------- legend

@@ -13,7 +13,7 @@ Built with [Astro](https://astro.build) and GSAP. Static output, deployed on Ver
 | Changelog | A version log instead of a bio |
 | Work | Problem → fix → stack entries for CreditClear, Scriptorium and VoltRoute |
 | Stack | Tap a tool to open a card on where it earned its place |
-| Connectome | A hand-rolled 3D force graph of everything learned, drawn on a canvas with no 3D library |
+| Connectome | A hand-rolled 3D force graph of everything learned, drawn on a canvas with no 3D library. Linked to the work section: opening a project entry lights its nodes, and a node card lists the projects that used it |
 | open-issue | Contact form framed as a bug report, powered by Web3Forms |
 | Terminal | Press `/` or the `>_` button anywhere. Real commands: `help`, `whoami`, `ls projects`, `cat creditclear`, `cd work`, `learning`, `man rohan`, `sudo hire rohan` |
 | Status line | Under the hero: what is being learned (from the Connectome data), last GitHub push and repo count fetched at build time, "ago" computed in the browser |

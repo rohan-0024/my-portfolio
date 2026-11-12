@@ -13,6 +13,7 @@ const counts = {
     <p class="intro dim">
       Everything I've learned, as one graph. Hubs are domains, ivory nodes are things I shipped,
       dots are tools, rings are ideas I learned the hard way. Dashed rings are still in progress.
+      Open a project above and its tools light up here. Tap a node to find the projects that used it.
     </p>
 
     <div class="connectome" data-connectome>
@@ -28,6 +29,7 @@ const counts = {
       <div class="stage">
         <canvas aria-label="Interactive 3D graph of skills, tools, concepts and projects" role="img"></canvas>
         <p class="hint mono" data-hint>drag to orbit · tap a node · ctrl+scroll to zoom</p>
+        <p class="lit mono" data-lit hidden></p>
         <aside class="card" data-card hidden></aside>
         <p class="stats mono">{counts.nodes} nodes · {counts.links} links · {counts.learning} in progress</p>
       </div>
@@ -71,6 +73,10 @@ const counts = {
       var(--ink);
   }
   .hint { position: absolute; left: 14px; bottom: 12px; margin: 0; font-size: 0.72rem; color: var(--ivory-dim); pointer-events: none; }
+  .lit { position: absolute; left: 14px; top: 12px; margin: 0; padding: 6px 10px; font-size: 0.72rem; color: var(--ivory-dim); border: 1px solid var(--rule); border-radius: 8px; background: rgba(21,21,26,0.85); max-width: calc(100% - 28px); }
+  .lit b { color: var(--ivory); font-weight: 500; }
+  .lit :global(.lnk) { background: none; border: 0; padding: 0; color: var(--coral); font: inherit; cursor: pointer; text-decoration: underline; }
+  .card :global(.tag.proj) { color: var(--ivory); border-color: var(--c); }
   .stats { position: absolute; right: 14px; bottom: 12px; margin: 0; font-size: 0.72rem; color: var(--ivory-dim); pointer-events: none; }
 
   .card {
