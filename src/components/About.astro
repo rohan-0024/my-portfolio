@@ -2,15 +2,18 @@
 import { about } from '../data/about';
 const { portrait, story, activities } = about;
 ---
-<section id="about" class="reveal">
+<section id="about" class="reveal tight">
   <div class="wrap">
     <p class="eyebrow">cat ./about.md</p>
     <h2>Before the first commit.</h2>
     <p class="intro dim">The changelog says what shipped. This is who was typing.</p>
 
     <div class="bio">
-      <figure class="portrait" aria-hidden="false">
-        <img src={portrait.src} alt={portrait.alt} width={portrait.width} height={portrait.height} loading="lazy" decoding="async" />
+      <figure class="portrait">
+        <div class="frame">
+          <span class="corner" aria-hidden="true"></span>
+          <img src={portrait.src} alt={portrait.alt} width={portrait.width} height={portrait.height} loading="lazy" decoding="async" />
+        </div>
         <figcaption class="mono dim">rohan@paul <span class="dot"></span> uptime: since 2023</figcaption>
       </figure>
 
@@ -41,6 +44,7 @@ const { portrait, story, activities } = about;
       <div class="panels">
         {activities.map((a) => (
           <div class="panel" id={`act-${a.id}`} data-panel={a.id} hidden>
+            <div class="body"><div class="body-inner">
             <div class={`shot accent-${a.accent}`}>
               {a.image ? (
                 <img src={a.image.src} alt={a.image.alt} width={a.image.width} height={a.image.height} loading="lazy" decoding="async" />
@@ -58,6 +62,7 @@ const { portrait, story, activities } = about;
               )}
             </div>
             <p class="caption">{a.caption}</p>
+            </div></div>
           </div>
         ))}
       </div>
@@ -78,8 +83,12 @@ const { portrait, story, activities } = about;
       });
       panels.forEach((p) => {
         const on = p.dataset.panel === id;
-        if (on && p.hidden) { p.hidden = false; p.classList.remove('in'); requestAnimationFrame(() => p.classList.add('in')); }
-        else if (!on) { p.hidden = true; p.classList.remove('in'); }
+        if (on && p.hidden) { p.hidden = false; requestAnimationFrame(() => requestAnimationFrame(() => p.classList.add('in'))); }
+        else if (!on && !p.hidden) {
+          p.classList.remove('in');
+          const done = () => { if (!p.classList.contains('in')) p.hidden = true; };
+          p.addEventListener('transitionend', done, { once: true }); setTimeout(done, 420);
+        }
       });
     };
     faces.forEach((f) => f.addEventListener('click', () => {
@@ -91,17 +100,24 @@ const { portrait, story, activities } = about;
 </script>
 
 <style>
+  .tight { padding-bottom: clamp(24px, 4vw, 48px); }
   .intro { max-width: 52ch; margin: 0 0 40px; }
   .bio { display: grid; grid-template-columns: minmax(180px, 260px) 1fr; gap: 40px clamp(32px, 6vw, 80px); align-items: start; }
   .portrait { margin: 0; position: sticky; top: 32px; }
-  .portrait img {
-    width: 100%; height: auto;
-    /* Background baked to alpha at build time (see public/about), so it floats on the page ink. */
-    filter: saturate(0.92) drop-shadow(0 30px 40px rgba(0,0,0,0.55));
-    -webkit-mask-image: linear-gradient(to bottom, #000 82%, transparent 100%);
-    mask-image: linear-gradient(to bottom, #000 82%, transparent 100%);
+  /* Framed like a photo tile: ivory grid paper, monochrome cut-out cropped at the waist by the frame's bottom edge. */
+  .frame {
+    position: relative; aspect-ratio: 3 / 4; overflow: hidden; border-radius: 14px; border: 1px solid var(--rule);
+    background-color: #e9e4d6;
+    background-image: linear-gradient(rgba(10,10,12,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(10,10,12,0.08) 1px, transparent 1px);
+    background-size: 28px 28px; background-position: center top;
+    box-shadow: 0 24px 50px rgba(0,0,0,0.45);
   }
-  .portrait figcaption { margin-top: 10px; font-size: 0.74rem; display: flex; align-items: center; gap: 8px; }
+  .corner { position: absolute; right: -22px; top: 18px; width: 70px; height: 70px; border-radius: 50% 50% 50% 0; background: var(--coral); opacity: 0.9; }
+  .frame img {
+    position: absolute; left: 50%; top: 5%; transform: translateX(-50%); width: 96%; max-width: none; height: auto;
+    filter: grayscale(1) contrast(1.05);
+  }
+  .portrait figcaption { margin-top: 10px; font-size: 0.72rem; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
   .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 10px var(--mint); }
 
   .story { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
@@ -131,20 +147,23 @@ const { portrait, story, activities } = about;
   .face::after { top: 12px; right: 14px; font-family: var(--font-mono); color: var(--accent); transition: transform 220ms ease; }
   .act.is-open .face::after { transform: rotate(45deg); }
 
-  .panel { margin-top: 14px; display: grid; grid-template-columns: minmax(0, 520px) 1fr; gap: 24px 32px; align-items: center; padding: 18px; border: 1px dashed var(--rule); border-radius: 14px; opacity: 0; transform: translateY(8px); transition: opacity 320ms ease, transform 320ms ease; }
-  .panel.in { opacity: 1; transform: none; }
+  .panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 360ms ease; }
+  .panel[hidden] { display: none; }
+  .panel.in { grid-template-rows: 1fr; }
+  .panel > .body { overflow: hidden; min-height: 0; }
+  .body-inner { margin-top: 14px; display: grid; grid-template-columns: minmax(0, 480px) 1fr; gap: 24px 32px; align-items: center; padding: 16px; border: 1px dashed var(--rule); border-radius: 14px; }
   .shot { border-radius: 10px; overflow: hidden; border: 1px solid var(--rule); background: var(--ink-2); }
-  .shot img { width: 100%; height: auto; max-height: 440px; object-fit: cover; }
+  .shot img { width: 100%; height: auto; max-height: 380px; object-fit: cover; }
   .keys { width: 100%; height: auto; }
   .caption { margin: 0; color: var(--ivory); line-height: 1.7; max-width: 44ch; }
 
-  @media (prefers-reduced-motion: reduce) { .panel { transition: none; transform: none; } .face:hover { transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .panel { transition: none; } .face:hover { transform: none; } }
   @media (max-width: 760px) {
     .bio { grid-template-columns: 1fr; gap: 28px; }
-    .portrait { position: static; width: min(52%, 200px); margin-inline: auto; }
+    .portrait { position: static; width: min(64%, 240px); margin-inline: auto; }
     .portrait figcaption { justify-content: center; }
     .story li { grid-template-columns: 1fr; gap: 4px; }
     .acts { grid-template-columns: 1fr; }
-    .panel { grid-template-columns: 1fr; padding: 12px; }
+    .body-inner { grid-template-columns: 1fr; padding: 12px; }
   }
 </style>

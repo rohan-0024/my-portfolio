@@ -47,7 +47,7 @@ A hidden honeypot checkbox filters bots.
 - Share card (the image shown when the link is posted): `og/og.html`, rendered to `public/og.png`
 - Postmortems: `src/data/postmortems.ts`. Résumé facts: `src/data/resume.ts` (keep in sync with `public/Rohan_Paul_Resume.pdf`)
 - Terminal commands: `src/scripts/terminal.ts`
-- About story and activities: `src/data/about.ts` (portrait is a WebP with baked-in alpha; regenerate from a photo on a pure black background)
+- About story and activities: `src/data/about.ts` (portrait is a WebP with baked-in alpha, cut out from a photo on a plain white background and shown greyscale inside the grid frame)
 
 ## Deploy to Vercel
 
