@@ -81,8 +81,12 @@ const { portrait, story, activities } = about;
         f.setAttribute('aria-expanded', String(on));
         f.parentElement!.classList.toggle('is-open', on);
       });
+      const container = root.querySelector<HTMLElement>('.panels')!;
+      const phone = matchMedia('(max-width: 760px)').matches;
       panels.forEach((p) => {
         const on = p.dataset.panel === id;
+        // On phones the panel sits right under its own card; on wider screens it spans the full row below all cards.
+        if (on) { const home = phone ? root.querySelector<HTMLElement>(`[data-act="${id}"]`)! : container; if (p.parentElement !== home) home.appendChild(p); }
         if (on && p.hidden) { p.hidden = false; requestAnimationFrame(() => requestAnimationFrame(() => p.classList.add('in'))); }
         else if (!on && !p.hidden) {
           p.classList.remove('in');
@@ -112,7 +116,7 @@ const { portrait, story, activities } = about;
     background-size: 28px 28px; background-position: center top;
     box-shadow: 0 24px 50px rgba(0,0,0,0.45);
   }
-  .corner { position: absolute; right: -22px; top: 18px; width: 70px; height: 70px; border-radius: 50% 50% 50% 0; background: var(--coral); opacity: 0.9; }
+  .corner { position: absolute; z-index: 1; right: -22px; top: 18px; width: 70px; height: 70px; border-radius: 50% 50% 50% 0; background: var(--coral); opacity: 0.9; }
   .frame img {
     position: absolute; left: 50%; top: 5%; transform: translateX(-50%); width: 96%; max-width: none; height: auto;
     filter: grayscale(1) contrast(1.04);
@@ -164,6 +168,7 @@ const { portrait, story, activities } = about;
     .portrait figcaption { justify-content: center; }
     .story li { grid-template-columns: 1fr; gap: 4px; }
     .acts { grid-template-columns: 1fr; }
-    .body-inner { grid-template-columns: 1fr; padding: 12px; }
+    .act .panel { margin-bottom: 4px; }
+    .body-inner { grid-template-columns: 1fr; padding: 12px; margin-top: 10px; }
   }
 </style>
