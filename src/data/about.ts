@@ -14,7 +14,7 @@ export type Activity = {
 };
 
 export const about = {
-  portrait: { src: '/about/rohan.webp', alt: 'Rohan Paul in a white shirt, black and white, framed on grid paper', width: 680, height: 1357 },
+  portrait: { src: '/about/rohan.webp', alt: 'Rohan Paul in a white shirt, black and white, framed on grid paper', width: 680, height: 1224 },
   story: [
     {
       when: '2021',
