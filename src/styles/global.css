@@ -63,7 +63,7 @@ button, input, textarea { font: inherit; color: inherit; }
 ::selection { background: var(--lavender); color: var(--ink); }
 
 .wrap { width: min(100% - 2 * var(--gutter), var(--max)); margin-inline: auto; }
-section { padding-block: clamp(56px, 10vw, 128px); }
+section { padding-block: clamp(56px, 10vw, 128px); scroll-margin-top: 52px; }
 .mono { font-family: var(--font-mono); font-size: 0.86rem; letter-spacing: 0.01em; }
 .dim { color: var(--ivory-dim); }
 

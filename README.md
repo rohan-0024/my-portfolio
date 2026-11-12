@@ -18,6 +18,7 @@ Built with [Astro](https://astro.build) and GSAP. Static output, deployed on Ver
 | Terminal | Press `/` or the `>_` button anywhere. Real commands: `help`, `whoami`, `ls projects`, `cat creditclear`, `cd work`, `learning`, `man rohan`, `sudo hire rohan` |
 | Status line | Under the hero: what is being learned (from the Connectome data), last GitHub push and repo count fetched at build time, "ago" computed in the browser |
 | About | `cat ./about.md`: the story before the first commit beside a cut-out portrait, then "Off the keyboard": three tappable activity cards (rides, badminton, keyboard) that open a photo and caption. Data in `src/data/about.ts`, images in `public/about/` |
+| Prompt bar | Sticky bar that appears after the hero: shows the current section as a shell path, tap it for a `cd` menu to any section |
 | /work/<slug> | Each project as an incident-report postmortem: summary, impact, timeline, root cause, resolution, verification, lessons, action items |
 | /resume | The résumé as a Unix man page, `man rohan`, with the PDF download |
 
