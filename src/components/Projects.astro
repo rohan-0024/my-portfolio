@@ -58,9 +58,8 @@ import { projects } from '../data/projects';
 <style>
   .intro { max-width: 52ch; margin: 0 0 36px; }
   .entries { border-top: 1px solid var(--rule); }
-  .entry { border-bottom: 1px solid var(--rule); transition: box-shadow 240ms ease; }
-  /* Lit from the Connectome: the node selected there was used in this project. */
-  .entry.is-lit { box-shadow: inset 3px 0 0 var(--accent); }
+  .entry { border-bottom: 1px solid var(--rule); }
+  /* Lit from the Connectome: the node selected there was used in this project. Title only, no bar. */
   .entry.is-lit summary .name { color: var(--accent); }
   summary {
     list-style: none;
